@@ -1,17 +1,28 @@
 package com.example.jobpilot.service;
 
+import com.example.jobpilot.dtos.JobApplicationDTO;
 import com.example.jobpilot.entities.JobApplication;
 import com.example.jobpilot.entities.JobCompanyInfo;
+import com.example.jobpilot.entities.JobPositionInfo;
+import com.example.jobpilot.enums.Sector;
 import com.example.jobpilot.repositories.JobApplicationRepository;
+import com.example.jobpilot.requests.JobApplicationRequest;
+import com.example.jobpilot.requests.JobCompanyInfoRequest;
+import com.example.jobpilot.requests.JobPositionInfoRequest;
+import com.example.jobpilot.responses.JobApplicationResponse;
 import com.example.jobpilot.services.JobApplicationService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.jobpilot.enums.CompanyType.STARTUP;
+import static com.example.jobpilot.enums.Sector.AI_DATA;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -30,50 +41,66 @@ public class JobApplicationServiceIT {
 
     @Test
     public void createJobApplication_shouldSaveJobApplication(){
-        JobApplication createdJob = JobApplication.builder()
+        JobApplicationRequest createdJob = JobApplicationRequest.builder()
                 .notes("Candidature test")
                 .build();
 
         jobApplicationService.createJobApplication(createdJob);
-
         assertThat(jobApplicationRepository.findAll()).isNotEmpty();
     }
 
     @Test
     public void getAllJobApplication_shouldReturnJobApplications(){
-        JobApplication.builder()
+        jobApplicationRepository.save(JobApplication.builder()
+                .jobCompanyInfo(JobCompanyInfo.builder()
+                        .name("Data Corp")
+                        .email("datascience@gmail.com")
+                        .adress("Rue")
+                        .companyType(STARTUP)
+                        .build())
+                .jobPositionInfo(JobPositionInfo.builder()
+                        .jobTitle("Data analyst")
+                        .applicationDate(LocalDate.of(2025, 7, 22))
+                        .build())
                 .notes("Candidature test")
-                .build();
+                .build());
 
-        List<JobApplication> jobApplicationList = jobApplicationService.getAllJobApplications();
-
+        List<JobApplicationResponse> jobApplicationList = jobApplicationService.getAllJobApplications();
         assertThat(jobApplicationList).hasSize(1);
     }
 
     @Test
     public void editJobApplication_shouldUpdateJobApplication(){
-        JobApplication save = JobApplication.builder()
+        JobApplication save = jobApplicationRepository.save(JobApplication.builder()
                 .jobCompanyInfo(JobCompanyInfo.builder()
                         .name("Data Corp")
                         .email("datascience@gmail.com")
+                        .adress("Rue")
+                        .companyType(STARTUP)
+                        .build())
+                .jobPositionInfo(JobPositionInfo.builder()
+                        .jobTitle("Data analyst")
+                        .applicationDate(LocalDate.of(2025, 7, 22))
                         .build())
                 .notes("Candidature test")
-                .build();
+                .build());
 
-        jobApplicationService.createJobApplication(save);
-
-        JobApplication update = JobApplication.builder()
+        JobApplicationRequest update = JobApplicationRequest.builder()
                 .id(save.getId())
-                .jobCompanyInfo(JobCompanyInfo.builder()
+                .jobCompanyInfo(JobCompanyInfoRequest.builder()
                         .id(save.getJobCompanyInfo().getId())
                         .name("DataScience Corp")
                         .email("datascience@gmail.com")
+                        .build())
+                .jobPositionInfo(JobPositionInfoRequest.builder()
+                        .jobTitle("Data analyst")
+                        .applicationDate(LocalDate.of(2025, 7, 22))
                         .build())
                 .notes("Candidature update")
                 .build();
 
         jobApplicationService.updateJobApplication(update);
-        List<JobApplication> jobApplicationList = jobApplicationService.getAllJobApplications();
+        List<JobApplicationResponse> jobApplicationList = jobApplicationService.getAllJobApplications();
         Optional<JobApplication> jobApplicationUpdated = jobApplicationRepository.findById(save.getId());
 
         assertThat(jobApplicationUpdated).isPresent();
@@ -87,5 +114,39 @@ public class JobApplicationServiceIT {
         JobApplication job =  jobApplicationRepository.save(JobApplication.builder().build());
         jobApplicationService.deleteJobApplication(job.getId());
         assertThat(jobApplicationRepository.findById(job.getId())).isEmpty();
+    }
+
+    @Test
+    public void search_shouldReturnMatchingJobApplication(){
+        jobApplicationRepository.save(JobApplication.builder()
+                .jobCompanyInfo(JobCompanyInfo.builder()
+                        .name("Data Corp")
+                        .email("datascience@gmail.com")
+                        .adress("Rue")
+                        .sector(AI_DATA)
+                        .companyType(STARTUP)
+                        .build())
+                .jobPositionInfo(JobPositionInfo.builder()
+                        .jobTitle("Data analyst")
+                        .applicationDate(LocalDate.of(2025, 7, 22))
+                        .build())
+                .notes("Candidature test")
+                .build());
+
+        List<JobApplicationResponse> results = jobApplicationService.search("Data");
+        assertThat(results).hasSize(1);
+        assertThat(results.get(0).getCompanyName()).isEqualTo("Data Corp");
+
+        List<JobApplicationResponse> results3 = jobApplicationService.search("analyst");
+        assertThat(results3).hasSize(1);
+        assertThat(results3.get(0).getJobTitle()).isEqualTo("Data analyst");
+    }
+
+    @Test
+    public void getCompanyById_shouldReturnCompany_ifCompanyExists() {
+        JobApplication job = jobApplicationRepository.save(JobApplication.builder().build());
+        JobApplicationDTO jobApplicationDTO = jobApplicationService.getJobApplicationById(job.getId());
+        assertThat(jobApplicationDTO.getId()).isEqualTo(job.getId());
+        assertThat(jobApplicationDTO).usingRecursiveComparison().isEqualTo(job);
     }
 }

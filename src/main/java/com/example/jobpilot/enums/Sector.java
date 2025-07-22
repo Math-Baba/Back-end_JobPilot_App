@@ -7,5 +7,6 @@ public enum Sector {
     FINTECH,
     ROBOTIQUE_IOT,
     DEVELOPPEMENT_WEB,
+    STARTUP,
     AUTRE
 }

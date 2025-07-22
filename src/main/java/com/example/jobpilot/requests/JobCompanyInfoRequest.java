@@ -1,4 +1,4 @@
-package com.example.jobpilot.dtos;
+package com.example.jobpilot.requests;
 
 import com.example.jobpilot.enums.CompanyType;
 import com.example.jobpilot.enums.Sector;
@@ -7,7 +7,7 @@ import lombok.Value;
 
 @Builder
 @Value
-public class JobCompanyInfoDTO {
+public class JobCompanyInfoRequest {
     Long id;
     String name;
     Sector sector;
