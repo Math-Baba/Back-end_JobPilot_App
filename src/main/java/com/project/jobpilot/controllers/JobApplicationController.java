@@ -1,0 +1,58 @@
+package com.project.jobpilot.controllers;
+
+import com.project.jobpilot.dtos.JobApplicationDTO;
+import com.project.jobpilot.requests.JobApplicationRequest;
+import com.project.jobpilot.responses.JobApplicationResponse;
+import com.project.jobpilot.services.JobApplicationService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/job")
+@CrossOrigin("*")
+@Validated
+public class JobApplicationController {
+
+    @Autowired
+    private JobApplicationService jobApplicationService;
+
+    @PostMapping()
+    public ResponseEntity<String> create(@Valid @RequestBody JobApplicationRequest request){
+        try {
+            jobApplicationService.createJobApplication(request);
+            return ResponseEntity.ok("Candidature créée avec succès");
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body("Erreur :" + e.getMessage());
+        }
+    }
+
+    @PutMapping()
+    public ResponseEntity<String> update(@Valid @RequestBody JobApplicationRequest request){
+        try {
+            jobApplicationService.updateJobApplication(request);
+            return ResponseEntity.ok("Candidature créée avec succès");
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body("Erreur :" + e.getMessage());
+        }
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<JobApplicationResponse>> getAll(){
+        return ResponseEntity.ok(jobApplicationService.getAllJobApplications());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<JobApplicationDTO> getById(@PathVariable long id){
+        return ResponseEntity.ok(jobApplicationService.getJobApplicationById(id));
+    }
+
+    @GetMapping("/search/{query}")
+    public ResponseEntity<List<JobApplicationResponse>> search(@PathVariable String query) {
+        return ResponseEntity.ok(jobApplicationService.search(query));
+    }
+}
