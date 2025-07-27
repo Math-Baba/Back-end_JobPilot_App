@@ -5,6 +5,7 @@ import com.project.jobpilot.entities.JobApplication;
 import com.project.jobpilot.entities.JobCompanyInfo;
 import com.project.jobpilot.entities.JobPositionInfo;
 import com.project.jobpilot.repositories.JobApplicationRepository;
+import com.project.jobpilot.requests.JobApplicationFilterRequest;
 import com.project.jobpilot.requests.JobApplicationRequest;
 import com.project.jobpilot.requests.JobCompanyInfoRequest;
 import com.project.jobpilot.requests.JobPositionInfoRequest;
@@ -146,5 +147,30 @@ public class JobApplicationServiceIT {
         JobApplicationDTO jobApplicationDTO = jobApplicationService.getJobApplicationById(job.getId());
         assertThat(jobApplicationDTO.getId()).isEqualTo(job.getId());
         assertThat(jobApplicationDTO).usingRecursiveComparison().isEqualTo(job);
+    }
+
+    @Test
+    public void filterJobApplication_shouldReturnJobApplicationIfExists(){
+        jobApplicationRepository.save(JobApplication.builder()
+                .jobCompanyInfo(JobCompanyInfo.builder()
+                        .name("Data Corp")
+                        .email("datascience@gmail.com")
+                        .adress("Rue")
+                        .sector(AI_DATA)
+                        .companyType(STARTUP)
+                        .build())
+                .jobPositionInfo(JobPositionInfo.builder()
+                        .jobTitle("Data analyst")
+                        .applicationDate(LocalDate.of(2025, 7, 22))
+                        .build())
+                .notes("Candidature test")
+                .build());
+
+        JobApplicationFilterRequest filterRequest = JobApplicationFilterRequest.builder()
+                .sector(List.of(AI_DATA))
+                .build();
+
+        List<JobApplicationResponse> jobs = jobApplicationService.filter(filterRequest);
+        assertThat(jobs).hasSize(1);
     }
 }

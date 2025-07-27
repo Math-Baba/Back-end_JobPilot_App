@@ -4,11 +4,14 @@ import com.project.jobpilot.dtos.JobApplicationDTO;
 import com.project.jobpilot.entities.JobApplication;
 import com.project.jobpilot.mappers.JobApplicationMapper;
 import com.project.jobpilot.repositories.JobApplicationRepository;
+import com.project.jobpilot.requests.JobApplicationFilterRequest;
 import com.project.jobpilot.requests.JobApplicationRequest;
 import com.project.jobpilot.responses.JobApplicationResponse;
+import com.project.jobpilot.specification.JobApplicationSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -70,4 +73,40 @@ public class JobApplicationService {
                 .toList();
     }
 
+    @Transactional
+    public List<JobApplicationResponse> filter(JobApplicationFilterRequest filterRequest) {
+        Specification<JobApplication> spec = null;
+
+        if (filterRequest.getPositionType() != null && !filterRequest.getPositionType().isEmpty()) {
+            spec = JobApplicationSpecification.hasPositionType(filterRequest.getPositionType());
+        }
+
+        if (filterRequest.getStatus() != null && !filterRequest.getStatus().isEmpty()) {
+            Specification<JobApplication> statusSpec = JobApplicationSpecification.hasStatus(filterRequest.getStatus());
+            spec = (spec == null) ? statusSpec : spec.and(statusSpec);
+        }
+
+        if (filterRequest.getApplicationDate() != null && !filterRequest.getApplicationDate().isEmpty()) {
+            Specification<JobApplication> dateSpec = JobApplicationSpecification.hasApplicationDate(filterRequest.getApplicationDate());
+            spec = (spec == null) ? dateSpec : spec.and(dateSpec);
+        }
+
+        if (filterRequest.getSector() != null && !filterRequest.getSector().isEmpty()) {
+            Specification<JobApplication> sectorSpec = JobApplicationSpecification.hasSector(filterRequest.getSector());
+            spec = (spec == null) ? sectorSpec : spec.and(sectorSpec);
+        }
+
+        if (filterRequest.getCompanyType() != null && !filterRequest.getCompanyType().isEmpty()) {
+            Specification<JobApplication> companyTypeSpec = JobApplicationSpecification.hasCompanyType(filterRequest.getCompanyType());
+            spec = (spec == null) ? companyTypeSpec : spec.and(companyTypeSpec);
+        }
+
+        List<JobApplication> results = (spec == null)
+                ? jobApplicationRepository.findAll()
+                : jobApplicationRepository.findAll(spec);
+
+        return results.stream()
+                .map(jobApplicationMapper::jobApplicationToJobApplicationResponse)
+                .collect(Collectors.toList());
+    }
 }

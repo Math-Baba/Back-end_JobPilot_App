@@ -1,6 +1,7 @@
 package com.project.jobpilot.controllers;
 
 import com.project.jobpilot.dtos.JobApplicationDTO;
+import com.project.jobpilot.requests.JobApplicationFilterRequest;
 import com.project.jobpilot.requests.JobApplicationRequest;
 import com.project.jobpilot.responses.JobApplicationResponse;
 import com.project.jobpilot.services.JobApplicationService;
@@ -60,5 +61,10 @@ public class JobApplicationController {
     @GetMapping("/search/{query}")
     public ResponseEntity<List<JobApplicationResponse>> search(@PathVariable String query) {
         return ResponseEntity.ok(jobApplicationService.search(query));
+    }
+
+    @PostMapping("/filter")
+    public ResponseEntity<List<JobApplicationResponse>> filter(@RequestBody JobApplicationFilterRequest filterRequest){
+        return ResponseEntity.ok(jobApplicationService.filter(filterRequest));
     }
 }
