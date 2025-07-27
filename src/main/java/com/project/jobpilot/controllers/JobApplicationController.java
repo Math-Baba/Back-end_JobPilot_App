@@ -35,10 +35,16 @@ public class JobApplicationController {
     public ResponseEntity<String> update(@Valid @RequestBody JobApplicationRequest request){
         try {
             jobApplicationService.updateJobApplication(request);
-            return ResponseEntity.ok("Candidature créée avec succès");
+            return ResponseEntity.ok("Candidature modifiée avec succès");
         } catch (Exception e){
             return ResponseEntity.badRequest().body("Erreur :" + e.getMessage());
         }
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteCompany(@PathVariable long id) {
+        jobApplicationService.deleteJobApplication(id);
+        return ResponseEntity.ok("La candidature a bien été supprimée avec succès");
     }
 
     @GetMapping()

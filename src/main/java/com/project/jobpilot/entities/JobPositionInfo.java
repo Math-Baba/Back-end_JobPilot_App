@@ -1,6 +1,7 @@
 package com.project.jobpilot.entities;
 
 import com.project.jobpilot.enums.PositionType;
+import com.project.jobpilot.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,6 +25,8 @@ public class JobPositionInfo {
     String jobTitle;
     @Enumerated(EnumType.STRING)
     PositionType positionType;
+    @Enumerated(EnumType.STRING)
+    Status status;
     @NotNull
     LocalDate applicationDate;
     String description;

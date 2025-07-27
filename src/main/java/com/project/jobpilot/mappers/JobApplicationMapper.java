@@ -15,8 +15,11 @@ public interface JobApplicationMapper {
     JobApplication jobApplicationRequestToJobApplication(JobApplicationRequest jobApplicationRequest);
 
     @Mapping(target = "companyName", ignore = true)
+    @Mapping(target = "email", ignore = true)
     @Mapping(target = "jobTitle", ignore = true)
     @Mapping(target = "sector", ignore = true)
+    @Mapping(target = "status", ignore=true)
+    @Mapping(target = "positionType", ignore=true)
     @Mapping(target = "companyAdress", ignore = true)
     @Mapping(target = "applicationDate", ignore = true)
     @Mapping(target = "companyType", ignore = true)
@@ -26,8 +29,11 @@ public interface JobApplicationMapper {
     default void jobApplicationToJobApplicationResponse(@MappingTarget JobApplicationResponse.JobApplicationResponseBuilder target, JobApplication source){
         target
                 .companyName(source.getJobCompanyInfo().getName())
+                .email(source.getJobCompanyInfo().getEmail())
                 .jobTitle(source.getJobPositionInfo().getJobTitle())
                 .sector(source.getJobCompanyInfo().getSector())
+                .status(source.getJobPositionInfo().getStatus())
+                .positionType(source.getJobPositionInfo().getPositionType())
                 .companyAdress(source.getJobCompanyInfo().getAdress())
                 .applicationDate(source.getJobPositionInfo().getApplicationDate())
                 .companyType(source.getJobCompanyInfo().getCompanyType());
