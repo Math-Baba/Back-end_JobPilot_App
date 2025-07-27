@@ -36,17 +36,6 @@ public class JobApplicationSpecification {
         };
     }
 
-    public static Specification<JobApplication> hasApplicationDate(List<LocalDate> applicationsDates){
-        return (root, query, criteriaBuilder) -> {
-            query.distinct(true);
-            if(applicationsDates == null || applicationsDates.isEmpty()){
-                return null;
-            }
-            Join<JobApplication, JobPositionInfo> applicationDateJoin = root.join("jobPositionInfo");
-            return applicationDateJoin.get("applicationDate").in(applicationsDates);
-        };
-    }
-
     public static Specification<JobApplication> hasSector(List<Sector> sectors){
         return (root, query, criteriaBuilder) -> {
             query.distinct(true);

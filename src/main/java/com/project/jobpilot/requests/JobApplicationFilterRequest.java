@@ -15,7 +15,6 @@ import java.util.List;
 public class JobApplicationFilterRequest {
     List<PositionType> positionType;
     List<Status> status;
-    List<LocalDate> applicationDate;
     List<Sector> sector;
     List<CompanyType> companyType;
 }

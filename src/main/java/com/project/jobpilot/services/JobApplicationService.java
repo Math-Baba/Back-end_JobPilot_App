@@ -86,11 +86,6 @@ public class JobApplicationService {
             spec = (spec == null) ? statusSpec : spec.and(statusSpec);
         }
 
-        if (filterRequest.getApplicationDate() != null && !filterRequest.getApplicationDate().isEmpty()) {
-            Specification<JobApplication> dateSpec = JobApplicationSpecification.hasApplicationDate(filterRequest.getApplicationDate());
-            spec = (spec == null) ? dateSpec : spec.and(dateSpec);
-        }
-
         if (filterRequest.getSector() != null && !filterRequest.getSector().isEmpty()) {
             Specification<JobApplication> sectorSpec = JobApplicationSpecification.hasSector(filterRequest.getSector());
             spec = (spec == null) ? sectorSpec : spec.and(sectorSpec);
