@@ -10,9 +10,11 @@ import com.project.jobpilot.enums.Status;
 import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Classe Specification permettant de construire des filtres/critéres réutilisables
+ */
 public class JobApplicationSpecification {
     public static Specification<JobApplication> hasPositionType(List<PositionType> positionTypes){
         return (root, query, criteriaBuilder) -> {

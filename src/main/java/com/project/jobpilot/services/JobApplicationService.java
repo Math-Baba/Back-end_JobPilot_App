@@ -15,10 +15,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service de gestion des Candidatures
+ * Centralise la logique métier de l'application (CRUD, filtre, recherche)
+ */
 @RequiredArgsConstructor
 @Service
 @Validated

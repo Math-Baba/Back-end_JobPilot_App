@@ -28,6 +28,7 @@ public class JobCompanyInfo {
     @NotBlank
     String email;
     String phone;
+    String website;
     @Enumerated(EnumType.STRING)
     CompanyType companyType;
 }

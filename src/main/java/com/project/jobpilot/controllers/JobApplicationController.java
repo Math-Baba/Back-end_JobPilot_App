@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller REST qui gère les opérations liées aux requêtes HTTP
+ * Traitement de la requête via un service puis envoie d'une réponse
+ */
 @RestController
 @RequestMapping("/job")
 @CrossOrigin("*")

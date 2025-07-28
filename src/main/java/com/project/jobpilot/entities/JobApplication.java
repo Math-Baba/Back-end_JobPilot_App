@@ -8,6 +8,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Entité JPA représentant la table correspondante en base de données.
+ */
 @Builder
 @Entity
 @AllArgsConstructor

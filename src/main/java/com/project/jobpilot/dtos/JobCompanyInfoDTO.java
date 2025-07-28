@@ -14,5 +14,6 @@ public class JobCompanyInfoDTO {
     String adress;
     String email;
     String phone;
+    String website;
     CompanyType companyType;
 }

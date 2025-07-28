@@ -14,5 +14,6 @@ public class JobCompanyInfoRequest {
     String adress;
     String email;
     String phone;
+    String website;
     CompanyType companyType;
 }

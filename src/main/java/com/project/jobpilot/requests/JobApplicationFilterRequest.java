@@ -7,9 +7,12 @@ import com.project.jobpilot.enums.Status;
 import lombok.Builder;
 import lombok.Value;
 
-import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Classe Request modélisant la structure du filtre
+ * Que le client envoie au serveur
+ */
 @Builder
 @Value
 public class JobApplicationFilterRequest {

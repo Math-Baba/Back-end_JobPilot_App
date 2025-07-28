@@ -9,6 +9,10 @@ import lombok.Value;
 
 import java.time.LocalDate;
 
+/**
+ * Classe Response qui modélise la structure
+ * De réponse envoyée du serveur au client
+ */
 @Builder(toBuilder = true)
 @Value
 public class JobApplicationResponse {
