@@ -24,5 +24,5 @@ Configurez la base de donnée Postgre SQL dans le application.properties.
 
 Lien vers le front-end: [Front-end](https://github.com/Math-Baba/Front-end_JobPilot_App.git) 
 
-# Auteur
+## Auteur
 **Math-Baba** - [GitHub](https://github.com/Math-Baba)
